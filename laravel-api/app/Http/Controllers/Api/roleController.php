@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use Exception;
-use Illuminate\Http\Request;
+
+use App\Models\Role;
+
 
 class roleController extends Controller
 {
