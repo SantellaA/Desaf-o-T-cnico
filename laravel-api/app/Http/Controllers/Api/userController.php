@@ -64,8 +64,11 @@ class userController extends Controller
         
         try{
             $validator = Validator::make($request->all(), [
-                'nombre'=> 'required',
-                'piso' => 'required'
+                'name' => 'required',
+                'email'=> 'required',
+                'password' => 'required',
+                'role_id' => 'required',
+                'password' => 'required',
             ]);
 
             if($validator->fails()){
@@ -76,8 +79,11 @@ class userController extends Controller
                 ];
             }else{
                 $usuario = User::create([
-                    'nombre'=> $request->nombre,
-                    'piso' => $request->piso
+                    'name' => 'required',
+                    'email'=> 'required',
+                    'password' => 'required',
+                    'role_id' => 'required',
+                    'password' => 'required',
                 ]);
 
                 $response = [
@@ -104,8 +110,11 @@ class userController extends Controller
             $usuario = User::findOrfail($id);
 
             $validator = Validator::make($request->all(), [
-                'nombre'=> 'required',
-                'piso' => 'required'
+                'name' => 'required',
+                'email'=> 'required',
+                'password' => 'required',
+                'role_id' => 'required',
+                'password' => 'required',
             ]);
 
             if($validator->fails()){
