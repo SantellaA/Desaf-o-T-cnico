@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('espacio', function (Blueprint $table) {
+        Schema::create('reservas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('piso');
+            $table->integer('hora');
+            $table->foreignId('espacio_id')->constrained('espacios')->onDelete('cascade');
+            $table->foreignId('usuario_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('espacio');
+        Schema::dropIfExists('reserva');
     }
 };

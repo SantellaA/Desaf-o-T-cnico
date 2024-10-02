@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Espacio extends Model
 {
     use HasFactory;
-    protected $table = 'espacio';
+    protected $table = 'espacios';
 
     protected $fillable = [
         'nombre',
