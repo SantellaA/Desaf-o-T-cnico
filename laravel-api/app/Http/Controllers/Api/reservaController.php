@@ -9,30 +9,27 @@ use Exception;
 
 use App\Models\Reserva;
 
+use App\Traits\ApiTrait;
 
 class reservaController extends Controller
 {
+    use ApiTrait;
     public function list(){
         $response =[];
         
         try{
             $reservas = Reserva::all(); 
 
+            $response = $this->formatearRespuesta('', 200, $reservas);
+
             if($reservas->isEmpty()){
                 $response['message'] = 'No hay reservas cargados en la base de datos';
             }else{
-                $response['message'] = 'Listado de reservas';
+                $response['message'] = 'LIST de reservas';
             }
 
-            $response['data'] = $reservas;    
-            $response['status'] = 200;
-
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo la istado de reservas',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo la istado de reservas', 500, $e, true);
         }
         
         return response()->json($response, $response['status']);
@@ -49,12 +46,10 @@ class reservaController extends Controller
                 'status' => 200
             ];
 
+            $response = $this->formatearRespuesta('GET de RESERVA con el id:' . $id, 200, $instance);
+            
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo la reserva con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo la reserva con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -73,17 +68,13 @@ class reservaController extends Controller
             ]);
 
             if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
             }else{
 
                 $reserva = [];
 
                 $horaInicioInt = intval($request->hora_inicio);
                 $horaFinalInt = intval($request->hora_final);
+                $response = $this->formatearRespuesta('Error, Datos invalidos', 400, $validator->errors(), true);
 
                 for ($i = $horaInicioInt; $i <= $horaFinalInt; $i += 100) {
                     
@@ -94,62 +85,14 @@ class reservaController extends Controller
 
                     array_push($reserva, $instanciaReserva);
                 }
+                $response = $this->formatearRespuesta('CREATE de Reserva', 201, $reserva, true);
 
-                $response = [
-                    'message' => 'Se creo correctamente una nueva reserva',
-                    'data' => $reserva,
-                    'status' => 201
-                ];
             }
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error creando un nuevo reserva',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error creando un nuevo reserva', 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
-    }
-
-    public function update(Request $request, int $id){
-        $response =[];
-
-        try{
-            $reserva = Reserva::findOrfail($id);
-
-            $validator = Validator::make($request->all(), [
-                'fecha'=> 'required',
-                'user_id'=> 'required',
-                'espacio_id'=> 'required',
-                'hora_inicio'=> 'required',
-                'hora_final' => 'required',
-            ]);
-
-            if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
-            }else{
-                $reserva->update($validator->validated());
-
-                $response = [
-                    'message' => 'se acualizo correctamente la reserva con el id: ' . $id,
-                    'data' => $reserva,
-                    'status' => 200
-                ];
-            }
-        }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error actualizando la reserva con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
-        }
-
-        return response()->json($response, $response['status']);
     }
 
     public function delete(int $id){
@@ -168,13 +111,10 @@ class reservaController extends Controller
                 'message' => 'reserva eliminada exitosamente',
                 'status' => 200
             ];
+            $response = $this->formatearRespuesta('DELETE de Reserva', 200);
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error eliminando la reserva con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando la reserva con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
