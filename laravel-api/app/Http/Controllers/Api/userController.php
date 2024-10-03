@@ -10,14 +10,19 @@ use Exception;
 
 use App\Models\User;
 use App\Models\Role;
+use App\Traits\ApiTrait;
 
 class userController extends Controller
 {
+    use ApiTrait;
+
     public function list(){
         $response =[];
         
         try{
             $usuarios = User::all(); 
+
+            $response = $this->formatearRespuesta('', 200, $usuarios);
 
             if($usuarios->isEmpty()){
                 $response['message'] = 'No hay usuarios cargados en la base de datos';
@@ -25,15 +30,8 @@ class userController extends Controller
                 $response['message'] = 'Listado de usuarios';
             }
 
-            $response['data'] = $usuarios;    
-            $response['status'] = 200;
-
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo el istado de usuarios',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el istado de usuarios', 500, $e, true);
         }
         
         return response()->json($response, $response['status']);
@@ -45,17 +43,11 @@ class userController extends Controller
         try{
             $instance = User::findOrFail($id);
 
-            $response = [
-                'message' => $instance,
-                'status' => 200
-            ];
+            $response = $this->formatearRespuesta('GET de User con el id: ' . $id, 200, $instance);    
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo el usuario con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el usuario con el id: ' . $id, 500, $e, true);
+
         }
 
         return response()->json($response, $response['status']);
@@ -73,11 +65,8 @@ class userController extends Controller
             ]);
 
             if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
+                $response = $this->formatearRespuesta('Error, Datos invalidos', 400, $validator->errors(), true);
+
             }else{
 
                 $role = Role::where('authority', $request->role)->first();
@@ -88,19 +77,12 @@ class userController extends Controller
                     'password' => Hash::make($request->password),
                     'role_id' => $role->id,
                 ]);
+                
+                $response = $this->formatearRespuesta('CREATE de User', 201, $usuario);
 
-                $response = [
-                    'message' => 'Se creo correctamente un nuevo usuario',
-                    'data' => $usuario,
-                    'status' => 201
-                ];
             }
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error creando un nuevo usuario',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error creando un nuevo usuario', 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
@@ -120,26 +102,16 @@ class userController extends Controller
             ]);
 
             if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
+                $response = $this->formatearRespuesta('Error, Datos invalidos', 400, $validator->errors(), true);
+
             }else{
                 $usuario->update($validator->validated());
 
-                $response = [
-                    'message' => 'se acualizo correctamente el usuario con el id: ' . $id,
-                    'data' => $usuario,
-                    'status' => 200
-                ];
+                $response = $this->formatearRespuesta('UPDATE del User con id: ' . $id, 200, $usuario);
+               
             }
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error actualizando el usuario con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error actualizando el usuario con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -157,17 +129,10 @@ class userController extends Controller
         
             $instance->delete();
 
-            $response = [
-                'message' => 'usuario eliminado exitosamente',
-                'status' => 200
-            ];
+            $response = $this->formatearRespuesta('DELETE del User con el id: ' . $id, 200);
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error eliminando el usuario con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando el usuario con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
