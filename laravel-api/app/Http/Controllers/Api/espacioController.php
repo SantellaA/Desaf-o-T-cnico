@@ -42,7 +42,7 @@ class espacioController extends Controller
         try{
             $instance = Espacio::findOrFail($id);
 
-            $response = $this->formatearRespuesta('GET de Espacios', 200, $instance);
+            $response = $this->formatearRespuesta('GET de Espacio con id: ' .$id, 200, $instance);
 
         }catch(Exception $e){
             $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el espacio con el id: ' . $id, 500, $e, true);
@@ -99,7 +99,7 @@ class espacioController extends Controller
 
             }
         }catch(Exception $e){
-            $response =  $this->formatearRespuesta(('Error, Ocurrio un error actualizando el espacio con el id: ' . $id), 500, $e, true);
+            $response =  $this->formatearRespuesta('Error, Ocurrio un error actualizando el espacio con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -120,7 +120,7 @@ class espacioController extends Controller
             $response = $this->formatearRespuesta('Espacio eliminado exitosamente', 200);
 
         }catch(Exception $e){
-            $response =  $this->formatearRespuesta(('Error, Ocurrio un error eliminando el espacio con el id: ' . $id), 500, $e, true);
+            $response =  $this->formatearRespuesta('Error, Ocurrio un error eliminando el espacio con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
