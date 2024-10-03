@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Exception;
 
 use App\Models\User;
+use App\Models\Role;
 
 class userController extends Controller
 {
@@ -67,8 +69,7 @@ class userController extends Controller
                 'name' => 'required',
                 'email'=> 'required',
                 'password' => 'required',
-                'role_id' => 'required',
-                'password' => 'required',
+                'role' => 'required',
             ]);
 
             if($validator->fails()){
@@ -78,12 +79,14 @@ class userController extends Controller
                     'status' => 400 
                 ];
             }else{
+
+                $role = Role::where('authority', $request->role)->first();
+
                 $usuario = User::create([
-                    'name' => 'required',
-                    'email'=> 'required',
-                    'password' => 'required',
-                    'role_id' => 'required',
-                    'password' => 'required',
+                    'name' => $request->name,
+                    'email'=> $request->email,
+                    'password' => Hash::make($request->password),
+                    'role_id' => $role->id,
                 ]);
 
                 $response = [
@@ -113,8 +116,7 @@ class userController extends Controller
                 'name' => 'required',
                 'email'=> 'required',
                 'password' => 'required',
-                'role_id' => 'required',
-                'password' => 'required',
+                'role' => 'required',
             ]);
 
             if($validator->fails()){
