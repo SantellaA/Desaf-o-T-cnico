@@ -23,7 +23,7 @@ class roleController extends Controller
             if($roles->isEmpty()){
                 $response['message'] = 'No hay roles cargados en la base de datos';
             }else{
-                $response['message'] = 'Listado de roles';
+                $response['message'] = 'LIST de Roles';
             }
 
         }catch(Exception $e){
@@ -42,7 +42,7 @@ class roleController extends Controller
             $response =  $this->formatearRespuesta('GET de Role con id: ' .$id, 200, $instance);
 
         }catch(Exception $e){;
-            $response =  $this->formatearRespuesta('Error, Ocurrio un error obteniendo el role con el id: ' . $id, 500, $e, true);
+            $response =  $this->formatearRespuesta('Error, Ocurrio un error obteniendo el role con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);

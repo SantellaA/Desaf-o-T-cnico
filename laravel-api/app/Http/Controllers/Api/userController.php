@@ -27,7 +27,7 @@ class userController extends Controller
             if($usuarios->isEmpty()){
                 $response['message'] = 'No hay usuarios cargados en la base de datos';
             }else{
-                $response['message'] = 'Listado de usuarios';
+                $response['message'] = 'LIST de User';
             }
 
         }catch(Exception $e){
@@ -43,10 +43,10 @@ class userController extends Controller
         try{
             $instance = User::findOrFail($id);
 
-            $response = $this->formatearRespuesta('GET de User con el id: ' . $id, 200, $instance);    
+            $response = $this->formatearRespuesta('GET de User con id: ' . $id, 200, $instance);    
 
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el usuario con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el usuario con id: ' . $id, 500, $e, true);
 
         }
 
@@ -107,11 +107,11 @@ class userController extends Controller
             }else{
                 $usuario->update($validator->validated());
 
-                $response = $this->formatearRespuesta('UPDATE del User con id: ' . $id, 200, $usuario);
+                $response = $this->formatearRespuesta('UPDATE de User con id: ' . $id, 200, $usuario);
                
             }
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error actualizando el usuario con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error actualizando el usuario con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -129,10 +129,10 @@ class userController extends Controller
         
             $instance->delete();
 
-            $response = $this->formatearRespuesta('DELETE del User con el id: ' . $id, 200);
+            $response = $this->formatearRespuesta('DELETE del User con id: ' . $id, 200);
 
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando el usuario con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando el usuario con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 

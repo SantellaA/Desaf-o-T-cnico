@@ -25,7 +25,7 @@ class espacioController extends Controller
             if($espacios->isEmpty()){
                 $response['message'] = 'No hay espacios cargados en la base de datos';
             }else{
-                $response['message'] = 'LIST de espacios';
+                $response['message'] = 'LIST de Espacio';
             }
 
 
@@ -45,7 +45,7 @@ class espacioController extends Controller
             $response = $this->formatearRespuesta('GET de Espacio con id: ' .$id, 200, $instance);
 
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el espacio con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el espacio con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -69,7 +69,7 @@ class espacioController extends Controller
                     'piso' => $request->piso
                 ]);
 
-                $response = $this->formatearRespuesta('CREATE de espacio', 201, $espacio);
+                $response = $this->formatearRespuesta('CREATE de Espacio', 201, $espacio);
             }
         }catch(Exception $e){
             $response = $this->formatearRespuesta('Error, Ocurrio un error creando un nuevo espacio', 500, $e, true);
@@ -99,7 +99,7 @@ class espacioController extends Controller
 
             }
         }catch(Exception $e){
-            $response =  $this->formatearRespuesta('Error, Ocurrio un error actualizando el espacio con el id: ' . $id, 500, $e, true);
+            $response =  $this->formatearRespuesta('Error, Ocurrio un error actualizando el espacio con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -117,10 +117,10 @@ class espacioController extends Controller
         
             $instance->delete();
 
-            $response = $this->formatearRespuesta('Espacio eliminado exitosamente', 200);
+            $response = $this->formatearRespuesta('DELETE de Espacio', 200);
 
         }catch(Exception $e){
-            $response =  $this->formatearRespuesta('Error, Ocurrio un error eliminando el espacio con el id: ' . $id, 500, $e, true);
+            $response =  $this->formatearRespuesta('Error, Ocurrio un error eliminando el espacio con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 

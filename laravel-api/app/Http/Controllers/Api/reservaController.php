@@ -25,7 +25,7 @@ class reservaController extends Controller
             if($reservas->isEmpty()){
                 $response['message'] = 'No hay reservas cargados en la base de datos';
             }else{
-                $response['message'] = 'LIST de reservas';
+                $response['message'] = 'LIST de Reserva';
             }
 
         }catch(Exception $e){
@@ -46,10 +46,10 @@ class reservaController extends Controller
                 'status' => 200
             ];
 
-            $response = $this->formatearRespuesta('GET de RESERVA con el id:' . $id, 200, $instance);
+            $response = $this->formatearRespuesta('GET de Reserva con id:' . $id, 200, $instance);
             
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo la reserva con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo la reserva con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -114,7 +114,7 @@ class reservaController extends Controller
             $response = $this->formatearRespuesta('DELETE de Reserva', 200);
 
         }catch(Exception $e){
-            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando la reserva con el id: ' . $id, 500, $e, true);
+            $response = $this->formatearRespuesta('Error, Ocurrio un error eliminando la reserva con id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
