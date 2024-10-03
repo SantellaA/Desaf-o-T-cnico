@@ -8,30 +8,29 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 
 use App\Models\Espacio;
+use App\Traits\ApiTrait;
 
 class espacioController extends Controller
 {
+    use ApiTrait;
+
     public function list(){
-        $response =[];
+        $response = [];
         
         try{
             $espacios = Espacio::all(); 
 
+            $response = $this->formatearRespuesta('', 200, $espacios);
+
             if($espacios->isEmpty()){
                 $response['message'] = 'No hay espacios cargados en la base de datos';
             }else{
-                $response['message'] = 'Listado de espacios';
+                $response['message'] = 'LIST de espacios';
             }
 
-            $response['data'] = $espacios;    
-            $response['status'] = 200;
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo el istado de espacios',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el istado de espacios', 500, $e, true);
         }
         
         return response()->json($response, $response['status']);
@@ -43,17 +42,10 @@ class espacioController extends Controller
         try{
             $instance = Espacio::findOrFail($id);
 
-            $response = [
-                'message' => $instance,
-                'status' => 200
-            ];
+            $response = $this->formatearRespuesta('GET de Espacios', 200, $instance);
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error obteniendo el espacio con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error obteniendo el espacio con el id: ' . $id, 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -69,29 +61,18 @@ class espacioController extends Controller
             ]);
 
             if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
+                $response = $this->formatearRespuesta('Error, Datos invalidos', 400, $validator->errors(), true);
+                
             }else{
                 $espacio = Espacio::create([
                     'nombre'=> $request->nombre,
                     'piso' => $request->piso
                 ]);
 
-                $response = [
-                    'message' => 'Se creo correctamente un nuevo espacio',
-                    'data' => $espacio,
-                    'status' => 201
-                ];
+                $response = $this->formatearRespuesta('CREATE de espacio', 201, $espacio);
             }
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error creando un nuevo espacio',
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response = $this->formatearRespuesta('Error, Ocurrio un error creando un nuevo espacio', 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
@@ -101,34 +82,24 @@ class espacioController extends Controller
         $response =[];
 
         try{
-            $espacio = Espacio::findOrfail($id);
-
             $validator = Validator::make($request->all(), [
                 'nombre'=> 'required',
                 'piso' => 'required'
             ]);
 
             if($validator->fails()){
-                $response =[
-                    'message' => 'Error, Datos invalidos',
-                    'errors' => $validator->errors(),
-                    'status' => 400 
-                ];
+                $response = $this->formatearRespuesta('Error, Datos invalidos', 400, $validator->errors(), true);
+                
             }else{
+                $espacio = Espacio::findOrfail($id);
+
                 $espacio->update($validator->validated());
 
-                $response = [
-                    'message' => 'se acualizo correctamente el espacio con el id: ' . $id,
-                    'data' => $espacio,
-                    'status' => 200
-                ];
+                $response = $this->formatearRespuesta('UPDATE del espacio con id: '. $id, 200, $espacio);
+
             }
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error actualizando el espacio con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response =  $this->formatearRespuesta(('Error, Ocurrio un error actualizando el espacio con el id: ' . $id), 500, $e, true);
         }
 
         return response()->json($response, $response['status']);
@@ -146,17 +117,10 @@ class espacioController extends Controller
         
             $instance->delete();
 
-            $response = [
-                'message' => 'Espacio eliminado exitosamente',
-                'status' => 200
-            ];
+            $response = $this->formatearRespuesta('Espacio eliminado exitosamente', 200);
 
         }catch(Exception $e){
-            $response = [
-                'message' => 'Error, Ocurrio un error eliminando el espacio con el id: ' . $id,
-                'errors' => $e,
-                'status' => 500
-            ];
+            $response =  $this->formatearRespuesta(('Error, Ocurrio un error eliminando el espacio con el id: ' . $id), 500, $e, true);
         }
 
         return response()->json($response, $response['status']); 
